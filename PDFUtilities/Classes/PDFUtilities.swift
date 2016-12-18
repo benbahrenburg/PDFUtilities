@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class PDFUtilities {
+open class PDFUtilities {
     
     class func toDocumentInfo(password: String) -> [String: AnyObject] {
         var info: [String: AnyObject] = [:]
