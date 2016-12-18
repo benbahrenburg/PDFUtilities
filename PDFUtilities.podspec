@@ -9,34 +9,15 @@
 Pod::Spec.new do |s|
   s.name             = 'PDFUtilities'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of PDFUtilities.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.summary          = 'Tools for working with PDFs'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Tools to stop you pulling your hair out when working with PDFs.
                        DESC
-
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/PDFUtilities'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/benbahrenburg/PDFUtilities'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Ben Bahrenburg' => 'ben.bahrenburg@gmail.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/PDFUtilities.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '8.0'
-
+  s.author           = { 'Ben Bahrenburg' => '@bencoding' }
+  s.source           = { :git => 'https://github.com/benbahrenburg/PDFUtilities.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/bencoding'
+  s.ios.deployment_target = '9.0'
   s.source_files = 'PDFUtilities/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'PDFUtilities' => ['PDFUtilities/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

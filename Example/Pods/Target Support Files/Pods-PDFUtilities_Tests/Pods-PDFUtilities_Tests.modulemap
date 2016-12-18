@@ -1,0 +1,6 @@
+framework module Pods_PDFUtilities_Tests {
+  umbrella header "Pods-PDFUtilities_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

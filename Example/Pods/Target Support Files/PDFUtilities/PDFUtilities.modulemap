@@ -1,0 +1,6 @@
+framework module PDFUtilities {
+  umbrella header "PDFUtilities-umbrella.h"
+
+  export *
+  module * { export * }
+}

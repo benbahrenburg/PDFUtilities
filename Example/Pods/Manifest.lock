@@ -1,0 +1,16 @@
+PODS:
+  - PDFUtilities (0.1.0)
+
+DEPENDENCIES:
+  - PDFUtilities (from `../`)
+
+EXTERNAL SOURCES:
+  PDFUtilities:
+    :path: ../
+
+SPEC CHECKSUMS:
+  PDFUtilities: a4454dbb583509e5041841733a842668dd5c8b69
+
+PODFILE CHECKSUM: 2592dfadd000064fbe2024dda4e7ca9e7ce69ec6
+
+COCOAPODS: 1.1.1
