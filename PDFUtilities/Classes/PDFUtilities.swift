@@ -149,12 +149,28 @@ open class PDFUtilities {
         return data as Data
     }
     
-    class open func addPassword(input: Data, password: String) throws -> Data {
-        let dataProvider = CGDataProvider(data: input as CFData)
-        let pdf = CGPDFDocument(dataProvider!)
-        return try convertPdfToData(pdf: pdf!, password: password)
+    class open func addPassword(fileURL: URL, password: String) throws -> Data? {
+        return try autoreleasepool { () -> Data? in
+            do {
+                let data = try Data(contentsOf: fileURL)
+                return try addPassword(input: data, password: password)
+            } catch {
+                return nil
+            }
+        }
     }
     
+    class open func addPassword(input: Data, password: String) throws -> Data? {
+        return try autoreleasepool { () -> Data? in
+            let dataProvider = CGDataProvider(data: input as CFData)
+            if let provider = dataProvider {
+                if let pdf = CGPDFDocument(provider) {
+                    return try convertPdfToData(pdf: pdf, password: password)
+                }
+            }
+            return nil
+        }
+    }
     
     class open func removePassword(fileURL: URL, password: String) throws -> Data? {
         return try autoreleasepool { () -> Data? in
