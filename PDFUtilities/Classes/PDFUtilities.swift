@@ -155,24 +155,39 @@ open class PDFUtilities {
         return try convertPdfToData(pdf: pdf!, password: password)
     }
     
-    class open func removePassword(input: Data, password: String) throws -> Data {
-        return try autoreleasepool { () -> Data in
+    
+    class open func removePassword(fileURL: URL, password: String) throws -> Data? {
+        return try autoreleasepool { () -> Data? in
+            do {
+                let data = try Data(contentsOf: fileURL)
+                return try removePassword(input: data, password: password)
+            } catch {
+                return nil
+            }
+        }
+    }
+    
+    class open func removePassword(input: Data, password: String) throws -> Data? {
+        return try autoreleasepool { () -> Data? in
             let dataProvider = CGDataProvider(data: input as CFData)
-            let pdf = CGPDFDocument(dataProvider!)
-            
-            // Try a blank password first, per Apple's Quartz PDF example
-            if pdf?.isEncrypted == true &&
-                pdf?.unlockWithPassword("") == false {
-                // Nope, now let's try the provided password to unlock the PDF
-                if let cPasswordString = password.cString(using: String.Encoding.utf8) {
-                    if pdf?.unlockWithPassword(cPasswordString) == false {
-                        print("Unable to unlock")
+            if let provider = dataProvider {
+                if let pdf = CGPDFDocument(provider) {
+                    // Try a blank password first, per Apple's Quartz PDF example
+                    if pdf.isEncrypted == true &&
+                        pdf.unlockWithPassword("") == false {
+                        // Nope, now let's try the provided password to unlock the PDF
+                        if let cPasswordString = password.cString(using: String.Encoding.utf8) {
+                            if pdf.unlockWithPassword(cPasswordString) == false {
+                                print("Unable to unlock")
+                                return nil
+                            }
+                        }
                     }
                     
+                    return try convertPdfToData(pdf: pdf)
                 }
             }
-            
-            return try convertPdfToData(pdf: pdf!)
+            return nil
         }
     }
     
