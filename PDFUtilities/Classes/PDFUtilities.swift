@@ -79,24 +79,20 @@ open class PDFUtilities {
     }
     
     class open func isValidPDF(fileURL: URL) -> Bool {
-        return autoreleasepool { () -> Bool in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return isValidPDF(data: data)
-            } catch {
-                return false
-            }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return isValidPDF(data: data)
+        } catch {
+            return false
         }
     }
     
     class open func canUnlock(fileURL: URL, password: String) -> Bool {
-        return autoreleasepool { () -> Bool in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return canUnlock(data: data, password: password)
-            } catch {
-                return false
-            }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return canUnlock(data: data, password: password)
+        } catch {
+            return false
         }
     }
     
@@ -120,14 +116,12 @@ open class PDFUtilities {
     }
     
     class open func unlock(data: Data, password: String? = nil) -> CGPDFDocument? {
-        return autoreleasepool { () -> CGPDFDocument? in
-            let dataProvider = CGDataProvider(data: data as CFData)
-            let pdf = CGPDFDocument(dataProvider!)
-            
-            guard password != nil else { return pdf }
-            
-            return unlock(pdf: pdf!, password: password)
-        }
+        let dataProvider = CGDataProvider(data: data as CFData)
+        let pdf = CGPDFDocument(dataProvider!)
+        
+        guard password != nil else { return pdf }
+        
+        return unlock(pdf: pdf!, password: password)
     }
     
     class open func unlock(pdf: CGPDFDocument, password: String? = nil) -> CGPDFDocument? {
@@ -182,71 +176,59 @@ open class PDFUtilities {
     }
     
     class open func addPassword(fileURL: URL, password: String) throws -> Data? {
-        return try autoreleasepool { () -> Data? in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return try addPassword(data: data, password: password)
-            } catch {
-                return nil
-            }
-        }
-    }
-    
-    class open func addPassword(data: Data, password: String) throws -> Data? {
-        return try autoreleasepool { () -> Data? in
-            let dataProvider = CGDataProvider(data: data as CFData)
-            if let provider = dataProvider {
-                if let pdf = CGPDFDocument(provider) {
-                    return try convertPdfToData(pdf: pdf, password: password)
-                }
-            }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try addPassword(data: data, password: password)
+        } catch {
             return nil
         }
     }
     
-    class open func removePassword(fileURL: URL, password: String) throws -> Data? {
-        return try autoreleasepool { () -> Data? in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return try removePassword(data: data, password: password)
-            } catch {
-                return nil
+    class open func addPassword(data: Data, password: String) throws -> Data? {
+        let dataProvider = CGDataProvider(data: data as CFData)
+        if let provider = dataProvider {
+            if let pdf = CGPDFDocument(provider) {
+                return try convertPdfToData(pdf: pdf, password: password)
             }
+        }
+        return nil
+    }
+    
+    class open func removePassword(fileURL: URL, password: String) throws -> Data? {
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try removePassword(data: data, password: password)
+        } catch {
+            return nil
         }
     }
     
     class open func removePassword(data: Data, password: String) throws -> Data? {
-        return try autoreleasepool { () -> Data? in
-            let pdf = unlock(data: data, password: password)
-            if pdf != nil { return nil }
-            return try convertPdfToData(pdf: pdf!)
-        }
+        let pdf = unlock(data: data, password: password)
+        if pdf != nil { return nil }
+        return try convertPdfToData(pdf: pdf!)
     }
     
     class open func convertPDFToImages(fileURL: URL, password: String? = nil) throws -> [UIImage]? {
-        return try autoreleasepool { () -> [UIImage]? in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return try convertPDFToImages(data: data, password: password)
-            } catch {
-                return nil
-            }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try convertPDFToImages(data: data, password: password)
+        } catch {
+            return nil
         }
     }
     
     class open func convertPDFToImages(data: Data, password: String? = nil) throws -> [UIImage]? {
-        return try autoreleasepool { () -> [UIImage]? in
-            do {
-                let dataProvider = CGDataProvider(data: data as CFData)
-                if let provider = dataProvider {
-                    if let pdf = CGPDFDocument(provider) {
-                        return convertPDFToImages(pdf: pdf, password: password)
-                    }
+        do {
+            let dataProvider = CGDataProvider(data: data as CFData)
+            if let provider = dataProvider {
+                if let pdf = CGPDFDocument(provider) {
+                    return convertPDFToImages(pdf: pdf, password: password)
                 }
-                return nil
-            } catch {
-                return nil
             }
+            return nil
+        } catch {
+            return nil
         }
     }
     
@@ -254,12 +236,10 @@ open class PDFUtilities {
         var output = [UIImage]()
         let pdf = (password != nil) ? unlock(pdf: pdf, password: password) : pdf
         
-        autoreleasepool {
-            let pageCount = pdf?.numberOfPages ?? 0
-            for index in 1...pageCount {
-                if let page = pdf?.page(at: index) {
-                    output.append(convertPageToImage(page: page))
-                }
+        let pageCount = pdf?.numberOfPages ?? 0
+        for index in 1...pageCount {
+            if let page = pdf?.page(at: index) {
+                output.append(convertPageToImage(page: page))
             }
         }
         
