@@ -37,13 +37,10 @@ open class PDFUtilities {
     }
     
     class open func hasPassword(fileURL: URL) -> Bool {
-        return autoreleasepool { () -> Bool in
-            do {
-                let data = try Data(contentsOf: fileURL)
-                return hasPassword(data: data)
-            } catch {
-                return false
-            }
+        do {
+            return hasPassword(data: try Data(contentsOf: fileURL))
+        } catch {
+            return false
         }
     }
     
@@ -64,8 +61,7 @@ open class PDFUtilities {
     
     class open func isValidPDF(data: Data) -> Bool {
         return autoreleasepool { () -> Bool in
-            let dataProvider = CGDataProvider(data: data as CFData)
-            if let provider = dataProvider {
+            if let provider = CGDataProvider(data: data as CFData) {
                 if let pdf = CGPDFDocument(provider) {
                     if pdf.isUnlocked || pdf.isEncrypted {
                         return true
@@ -80,8 +76,7 @@ open class PDFUtilities {
     
     class open func isValidPDF(fileURL: URL) -> Bool {
         do {
-            let data = try Data(contentsOf: fileURL)
-            return isValidPDF(data: data)
+            return isValidPDF(data: try Data(contentsOf: fileURL))
         } catch {
             return false
         }
@@ -89,8 +84,7 @@ open class PDFUtilities {
     
     class open func canUnlock(fileURL: URL, password: String) -> Bool {
         do {
-            let data = try Data(contentsOf: fileURL)
-            return canUnlock(data: data, password: password)
+            return canUnlock(data: try Data(contentsOf: fileURL), password: password)
         } catch {
             return false
         }
@@ -98,8 +92,7 @@ open class PDFUtilities {
     
     class open func canUnlock(data: Data, password: String) -> Bool {
         return autoreleasepool { () -> Bool in
-            let dataProvider = CGDataProvider(data: data as CFData)
-            let pdf = CGPDFDocument(dataProvider!)
+            let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!)
             
             // Try a blank password first, per Apple's Quartz PDF example
             if pdf?.isEncrypted == true &&
@@ -116,8 +109,7 @@ open class PDFUtilities {
     }
     
     class open func unlock(data: Data, password: String? = nil) -> CGPDFDocument? {
-        let dataProvider = CGDataProvider(data: data as CFData)
-        let pdf = CGPDFDocument(dataProvider!)
+        let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!)
         
         guard password != nil else { return pdf }
         
@@ -128,24 +120,22 @@ open class PDFUtilities {
         
         guard password != nil else { return pdf }
         
-        return autoreleasepool { () -> CGPDFDocument? in
-            // Try a blank password first, per Apple's Quartz PDF example
-            if pdf.isEncrypted == true &&
-                pdf.unlockWithPassword("") == false {
-                if let pwd = password {
-                    // Nope, now let's try the provided password to unlock the PDF
-                    if let cPasswordString = pwd.cString(using: String.Encoding.utf8) {
-                        if pdf.unlockWithPassword(cPasswordString) == true {
-                            return pdf
-                        }
+        // Try a blank password first, per Apple's Quartz PDF example
+        if pdf.isEncrypted == true &&
+            pdf.unlockWithPassword("") == false {
+            if let pwd = password {
+                // Nope, now let's try the provided password to unlock the PDF
+                if let cPasswordString = pwd.cString(using: String.Encoding.utf8) {
+                    if pdf.unlockWithPassword(cPasswordString) == true {
+                        return pdf
                     }
                 }
             }
-            return nil
         }
+        return nil
     }
     
-    class open func convertPdfToData(pdf: CGPDFDocument, password: String? = nil) throws -> Data {
+    class open func convertPdfToData(pdf: CGPDFDocument, password: String? = nil) -> Data {
         let data = NSMutableData()
         
         autoreleasepool {
@@ -175,61 +165,45 @@ open class PDFUtilities {
         return data as Data
     }
     
-    class open func addPassword(fileURL: URL, password: String) throws -> Data? {
+    class open func addPassword(fileURL: URL, password: String) -> Data? {
         do {
-            let data = try Data(contentsOf: fileURL)
-            return try addPassword(data: data, password: password)
+            return addPassword(data: try Data(contentsOf: fileURL), password: password)
         } catch {
             return nil
         }
     }
     
-    class open func addPassword(data: Data, password: String) throws -> Data? {
-        let dataProvider = CGDataProvider(data: data as CFData)
-        if let provider = dataProvider {
+    class open func addPassword(data: Data, password: String) -> Data? {
+        if let provider = CGDataProvider(data: data as CFData) {
             if let pdf = CGPDFDocument(provider) {
-                return try convertPdfToData(pdf: pdf, password: password)
+                return convertPdfToData(pdf: pdf, password: password)
             }
         }
         return nil
     }
     
     class open func removePassword(fileURL: URL, password: String) throws -> Data? {
-        do {
-            let data = try Data(contentsOf: fileURL)
-            return try removePassword(data: data, password: password)
-        } catch {
-            return nil
-        }
+        return try removePassword(data: try Data(contentsOf: fileURL), password: password)
     }
     
     class open func removePassword(data: Data, password: String) throws -> Data? {
-        let pdf = unlock(data: data, password: password)
-        if pdf != nil { return nil }
-        return try convertPdfToData(pdf: pdf!)
+        if let pdf = unlock(data: data, password: password) {
+            return convertPdfToData(pdf: pdf)
+        }
+        return nil
     }
     
     class open func convertPDFToImages(fileURL: URL, password: String? = nil) throws -> [UIImage]? {
-        do {
-            let data = try Data(contentsOf: fileURL)
-            return try convertPDFToImages(data: data, password: password)
-        } catch {
-            return nil
-        }
+        return try convertPDFToImages(data: try Data(contentsOf: fileURL), password: password)
     }
     
     class open func convertPDFToImages(data: Data, password: String? = nil) throws -> [UIImage]? {
-        do {
-            let dataProvider = CGDataProvider(data: data as CFData)
-            if let provider = dataProvider {
-                if let pdf = CGPDFDocument(provider) {
-                    return convertPDFToImages(pdf: pdf, password: password)
-                }
+        if let provider = CGDataProvider(data: data as CFData) {
+            if let pdf = CGPDFDocument(provider) {
+                return convertPDFToImages(pdf: pdf, password: password)
             }
-            return nil
-        } catch {
-            return nil
         }
+        return nil
     }
     
     class open func convertPDFToImages(pdf: CGPDFDocument, password: String? = nil) -> [UIImage]? {
@@ -251,31 +225,29 @@ open class PDFUtilities {
         guard scaleFactor > 0.0 else {
             return nil
         }
+  
+        let data = NSMutableData()
+        let pageCount = images.count - 1
         
-        return autoreleasepool { () -> Data in
-            let data = NSMutableData()
-            let pageCount = images.count - 1
+        autoreleasepool {
+            let options = (password != nil) ? self.toDocumentInfo(password: password!) : nil
+            UIGraphicsBeginPDFContextToData(data, .zero, options)
             
-            autoreleasepool {
-                let options = (password != nil) ? self.toDocumentInfo(password: password!) : nil
-                UIGraphicsBeginPDFContextToData(data, .zero, options)
-                
-                for index in 0...pageCount {
-                    let bounds = CGRect(
-                        origin: .zero,
-                        size: CGSize(
-                            width: images[index].size.width * scaleFactor,
-                            height: images[index].size.height * scaleFactor
-                        )
+            for index in 0...pageCount {
+                let bounds = CGRect(
+                    origin: .zero,
+                    size: CGSize(
+                        width: images[index].size.width * scaleFactor,
+                        height: images[index].size.height * scaleFactor
                     )
-                    UIGraphicsBeginPDFPageWithInfo(bounds, nil)
-                    images[index].draw(in: bounds)
-                }
-                UIGraphicsEndPDFContext()
+                )
+                UIGraphicsBeginPDFPageWithInfo(bounds, nil)
+                images[index].draw(in: bounds)
             }
-            
-            return data as Data
+            UIGraphicsEndPDFContext()
         }
+        
+        return data as Data
     }
     
 }
