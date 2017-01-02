@@ -1,15 +1,21 @@
 # PDFUtilities
 
-[![CI Status](http://img.shields.io/travis/Ben Bahrenburg/PDFUtilities.svg?style=flat)](https://travis-ci.org/Ben Bahrenburg/PDFUtilities)
-[![Version](https://img.shields.io/cocoapods/v/PDFUtilities.svg?style=flat)](http://cocoapods.org/pods/PDFUtilities)
-[![License](https://img.shields.io/cocoapods/l/PDFUtilities.svg?style=flat)](http://cocoapods.org/pods/PDFUtilities)
-[![Platform](https://img.shields.io/cocoapods/p/PDFUtilities.svg?style=flat)](http://cocoapods.org/pods/PDFUtilities)
+PDFUtilities makes working with PDFs in Swift easier.  Utilities to make working with PDFs bearable.
 
-## Example
+## Features
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+* Convert UIImages to PDF
+* Unlock PDFs
+* Add Password to PDF
+* Remove Password from PDF
+* Check if file is a valid PDF
+* Check if PDF is locked or encrypted
 
 ## Requirements
+
+* Xcode 8.2 or newer
+* Swift 3.0
+* iOS 9 or greater
 
 ## Installation
 
@@ -19,6 +25,16 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "PDFUtilities"
 ```
+
+__Carthage__
+
+```
+github "benbahrenburg/PDFUtilities"
+```
+
+__Manually__
+
+Copy all `*.swift` files contained in `PDFUtilities/Classes/` directory into your project. 
 
 ## Author
 
