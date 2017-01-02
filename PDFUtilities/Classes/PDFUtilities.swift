@@ -287,14 +287,14 @@ open class PDFUtilities {
     }
     
     class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1) throws -> Data? {
-        return try convertImagesToPDF(images: images, documentPasswordInfo: nil, scaleFactor: scaleFactor)
+        return try convertImagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: nil)
     }
     
-    class open func convertImagesToPDF(images: [UIImage], password: String, scaleFactor: CGFloat = 1) throws -> Data? {
-        return try convertImagesToPDF(images: images, documentPasswordInfo: PDFDocumentPasswordInfo(password: password), scaleFactor: scaleFactor)
+    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, password: String) throws -> Data? {
+        return try convertImagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
-    class open func convertImagesToPDF(images: [UIImage], documentPasswordInfo: PDFDocumentPasswordInfo? = nil, scaleFactor: CGFloat = 1) throws -> Data? {
+    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> Data? {
         
         guard scaleFactor > 0.0 else {
             return nil
