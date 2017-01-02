@@ -8,21 +8,56 @@
 
 import UIKit
 
+/**
+ 
+ Utilities to make working with PDFs bearable
+ 
+ */
 open class PDFUtilities {
-    
+
+    /**
+     
+     PDF Password Struct, used to unlock or add a password to a PDF
+     
+     Provides the ability to set the User and/or Owner Passwords
+     
+     If you init using just a single password the User password will be used.
+     
+     */
     public struct PDFDocumentPasswordInfo {
-        var userPassword: String? = nil
-        var ownerPassword: String? = nil
         
+        /// User Password (optional)
+        var userPassword: String? = nil
+        
+        /// Owner Password (optional)
+        var ownerPassword: String? = nil
+ 
+        /**
+         Creates a new instance of the PDFDocumentPasswordInfo object
+         
+         - Parameter userPassword: The User password
+         - Parameter ownerPassword: The Owner password
+         */
         public init(userPassword: String, ownerPassword: String) {
             self.userPassword = userPassword
             self.ownerPassword = ownerPassword
         }
-        
+
+        /**
+         Creates a new instance of the PDFDocumentPasswordInfo object
+         
+         - Parameter password: The password provided will be used as the User Password
+         */
         public init(password: String) {
             self.userPassword = password
         }
-        
+
+        /**
+         The toInfo method is used to create meta data for unlocking or locking pdfs.
+         
+         - Parameter forKey: The key used to return a stored value
+         - Returns: An Array of items used when locking or unlocking PDFs.
+         */
         func toInfo() -> [AnyHashable : Any] {
             var info: [AnyHashable : Any] = [:]
             if let userPassword = self.userPassword {
@@ -36,7 +71,7 @@ open class PDFUtilities {
         }
     }
     
-    class open func convertPageToImage(page: CGPDFPage) -> UIImage {
+    class open func convertPageToImage(page: CGPDFPage) -> UIImage? {
         let pageRect = page.getBoxRect(CGPDFBox.mediaBox)
         
         UIGraphicsBeginImageContext(pageRect.size)
@@ -53,7 +88,7 @@ open class PDFUtilities {
         let backgroundImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return backgroundImage!
+        return backgroundImage
     }
     
     class open func hasPassword(fileURL: URL) throws -> Bool {
@@ -279,7 +314,9 @@ open class PDFUtilities {
         let pageCount = pdf?.numberOfPages ?? 0
         for index in 1...pageCount {
             if let page = pdf?.page(at: index) {
-                output.append(convertPageToImage(page: page))
+                if let img = convertPageToImage(page: page) {
+                   output.append(img)
+                }
             }
         }
         
