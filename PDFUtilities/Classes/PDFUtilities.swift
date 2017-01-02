@@ -65,7 +65,7 @@ open class PDFUtilities {
             let dataProvider = CGDataProvider(data: data as CFData)
             if let provider = dataProvider {
                 if let pdf = CGPDFDocument(provider) {
-                    if pdf.isUnlocked || pdf.isEncrypted {
+                    if pdf.isUnlocked == false || pdf.isEncrypted {
                         return true
                     }
                 }
@@ -79,7 +79,7 @@ open class PDFUtilities {
         return autoreleasepool { () -> Bool in
             if let provider = CGDataProvider(data: data as CFData) {
                 if let pdf = CGPDFDocument(provider) {
-                    if pdf.isUnlocked || pdf.isEncrypted {
+                    if pdf.isUnlocked == false || pdf.isEncrypted {
                         return true
                     }
                     return pdf.numberOfPages > 0
@@ -284,6 +284,10 @@ open class PDFUtilities {
         }
         
         return output
+    }
+    
+    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1) throws -> Data? {
+        return try convertImagesToPDF(images: images, documentPasswordInfo: nil, scaleFactor: scaleFactor)
     }
     
     class open func convertImagesToPDF(images: [UIImage], password: String? = nil, scaleFactor: CGFloat = 1) throws -> Data? {
