@@ -290,8 +290,8 @@ open class PDFUtilities {
         return try convertImagesToPDF(images: images, documentPasswordInfo: nil, scaleFactor: scaleFactor)
     }
     
-    class open func convertImagesToPDF(images: [UIImage], password: String? = nil, scaleFactor: CGFloat = 1) throws -> Data? {
-        return try convertImagesToPDF(images: images, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)), scaleFactor: scaleFactor)
+    class open func convertImagesToPDF(images: [UIImage], password: String, scaleFactor: CGFloat = 1) throws -> Data? {
+        return try convertImagesToPDF(images: images, documentPasswordInfo: PDFDocumentPasswordInfo(password: password), scaleFactor: scaleFactor)
     }
     
     class open func convertImagesToPDF(images: [UIImage], documentPasswordInfo: PDFDocumentPasswordInfo? = nil, scaleFactor: CGFloat = 1) throws -> Data? {
