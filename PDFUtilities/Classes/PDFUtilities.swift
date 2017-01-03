@@ -14,82 +14,6 @@ import UIKit
  
  */
 open class PDFUtilities {
-
-    /**
-     
-     PDF Password Struct, used to unlock or add a password to a PDF
-     
-     Provides the ability to set the User and/or Owner Passwords
-     
-     If you init using just a single password the User password will be used.
-     
-     */
-    public struct PDFDocumentPasswordInfo {
-        
-        /// User Password (optional)
-        var userPassword: String? = nil
-        
-        /// Owner Password (optional)
-        var ownerPassword: String? = nil
- 
-        /**
-         Creates a new instance of the PDFDocumentPasswordInfo object
-         
-         - Parameter userPassword: The User password
-         - Parameter ownerPassword: The Owner password
-         */
-        public init(userPassword: String, ownerPassword: String) {
-            self.userPassword = userPassword
-            self.ownerPassword = ownerPassword
-        }
-
-        /**
-         Creates a new instance of the PDFDocumentPasswordInfo object
-         
-         - Parameter password: The password provided will be used as the User Password
-         */
-        public init(password: String) {
-            self.userPassword = password
-        }
-
-        /**
-         The toInfo method is used to create meta data for unlocking or locking pdfs.
-         
-         - Parameter forKey: The key used to return a stored value
-         - Returns: An Array of items used when locking or unlocking PDFs.
-         */
-        func toInfo() -> [AnyHashable : Any] {
-            var info: [AnyHashable : Any] = [:]
-            if let userPassword = self.userPassword {
-                info[String(kCGPDFContextUserPassword)] = userPassword as AnyObject?
-            }
-            if let ownerPassword = self.ownerPassword {
-                info[String(kCGPDFContextOwnerPassword)] = ownerPassword as AnyObject?
-            }
-            
-            return info
-        }
-    }
-    
-    class open func convertPageToImage(page: CGPDFPage) -> UIImage? {
-        let pageRect = page.getBoxRect(CGPDFBox.mediaBox)
-        
-        UIGraphicsBeginImageContext(pageRect.size)
-        let ctx = UIGraphicsGetCurrentContext()
-        ctx?.interpolationQuality = .high
-        
-        // Draw existing page
-        ctx!.saveGState()
-        ctx!.scaleBy(x: 1, y: -1)
-        ctx!.translateBy(x: 0, y: -(pageRect.size.height))
-        ctx!.drawPDFPage(page)
-        ctx!.restoreGState()
-        
-        let backgroundImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return backgroundImage
-    }
     
     class open func hasPassword(fileURL: URL) throws -> Bool {
         return hasPassword(data: try Data(contentsOf: fileURL))
@@ -205,43 +129,7 @@ open class PDFUtilities {
         
         return nil
     }
-    
-    class open func convertPdfToData(pdf: CGPDFDocument, password: String? = nil) -> Data {
-        return convertPdfToData(pdf: pdf, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func convertPdfToData(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> Data {
-        let data = NSMutableData()
         
-        autoreleasepool {
-            let pageCount = pdf.numberOfPages
-            let options = (documentPasswordInfo != nil) ? documentPasswordInfo?.toInfo() : nil
-            
-            UIGraphicsBeginPDFContextToData(data, .zero, options)
-            
-            for index in 1...pageCount {
-                
-                let page = pdf.page(at: index)
-                let pageRect = page?.getBoxRect(CGPDFBox.mediaBox)
-                
-                
-                UIGraphicsBeginPDFPageWithInfo(pageRect!, nil)
-                let ctx = UIGraphicsGetCurrentContext()
-                ctx?.interpolationQuality = .high
-                // Draw existing page
-                ctx!.saveGState()
-                ctx!.scaleBy(x: 1, y: -1)
-                ctx!.translateBy(x: 0, y: -(pageRect?.size.height)!)
-                ctx!.drawPDFPage(page!)
-                ctx!.restoreGState()
-                
-            }
-            
-            UIGraphicsEndPDFContext()
-        }
-        return data as Data
-    }
-    
     class open func addPassword(fileURL: URL, password: String) throws -> Data? {
         return try addPassword(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
@@ -257,7 +145,7 @@ open class PDFUtilities {
     class open func addPassword(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> Data? {
         if let provider = CGDataProvider(data: data as CFData) {
             if let pdf = CGPDFDocument(provider) {
-                return convertPdfToData(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
+                return PDFConverters.pdfToData(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
             }
         }
         return nil
@@ -277,88 +165,9 @@ open class PDFUtilities {
     
     class open func removePassword(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> Data? {
         if let pdf = unlock(data: data, documentPasswordInfo: documentPasswordInfo) {
-            return convertPdfToData(pdf: pdf, documentPasswordInfo: nil)
+            return PDFConverters.pdfToData(pdf: pdf, documentPasswordInfo: nil)
         }
         return nil
-    }
-    
-    class open func convertPDFToImages(fileURL: URL, password: String? = nil) throws -> [UIImage]? {
-        return try convertPDFToImages(fileURL: fileURL, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func convertPDFToImages(data: Data, password: String? = nil) -> [UIImage]? {
-        return convertPDFToImages(data: data, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func convertPDFToImages(pdf: CGPDFDocument, password: String? = nil) -> [UIImage]? {
-        return convertPDFToImages(pdf: pdf, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func convertPDFToImages(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> [UIImage]? {
-        return try convertPDFToImages(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
-    }
-    
-    class open func convertPDFToImages(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {
-        if let provider = CGDataProvider(data: data as CFData) {
-            if let pdf = CGPDFDocument(provider) {
-                return convertPDFToImages(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
-            }
-        }
-        return nil
-    }
-    
-    class open func convertPDFToImages(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {
-        var output = [UIImage]()
-        let pdf = (documentPasswordInfo != nil) ? unlock(pdf: pdf, documentPasswordInfo: documentPasswordInfo) : pdf
-        
-        let pageCount = pdf?.numberOfPages ?? 0
-        for index in 1...pageCount {
-            if let page = pdf?.page(at: index) {
-                if let img = convertPageToImage(page: page) {
-                   output.append(img)
-                }
-            }
-        }
-        
-        return output
-    }
-    
-    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1) throws -> Data? {
-        return try convertImagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: nil)
-    }
-    
-    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, password: String) throws -> Data? {
-        return try convertImagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
-    class open func convertImagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> Data? {
-        
-        guard scaleFactor > 0.0 else {
-            return nil
-        }
-        
-        let data = NSMutableData()
-        let pageCount = images.count - 1
-        
-        autoreleasepool {
-            let options = (documentPasswordInfo != nil) ? documentPasswordInfo?.toInfo() : nil
-            UIGraphicsBeginPDFContextToData(data, .zero, options)
-            
-            for index in 0...pageCount {
-                let bounds = CGRect(
-                    origin: .zero,
-                    size: CGSize(
-                        width: images[index].size.width * scaleFactor,
-                        height: images[index].size.height * scaleFactor
-                    )
-                )
-                UIGraphicsBeginPDFPageWithInfo(bounds, nil)
-                images[index].draw(in: bounds)
-            }
-            UIGraphicsEndPDFContext()
-        }
-        
-        return data as Data
     }
     
 }

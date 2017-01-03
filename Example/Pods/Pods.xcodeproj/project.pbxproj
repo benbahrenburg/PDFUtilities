@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3D04292B9E38E00490A8BC03E367855F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
+		3EB1B12B1E1B284F00152A51 /* PDFDocumentPasswordInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB1B12A1E1B284F00152A51 /* PDFDocumentPasswordInfo.swift */; };
+		3EB1B12D1E1B289900152A51 /* PDFConverters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB1B12C1E1B289900152A51 /* PDFConverters.swift */; };
 		421E1ECC254A23BB3B06ED9718326826 /* Pods-PDFUtilities_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 963F698EF39EDEC006B483F316BA8DEB /* Pods-PDFUtilities_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4612DD4F165FE1AB28E3D14327099F39 /* PDFUtilities-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B58DD286D24400ECA2F46221A37D84F /* PDFUtilities-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EF9B549497960E57C2B0A80880E61E4 /* Pods-PDFUtilities_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E64BFFAB04BA2153D65BF32B0D1270A /* Pods-PDFUtilities_Example-dummy.m */; };
@@ -35,6 +37,8 @@
 		1B58DD286D24400ECA2F46221A37D84F /* PDFUtilities-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PDFUtilities-umbrella.h"; sourceTree = "<group>"; };
 		22FC138506FF94DDA6E3F346CF13D567 /* PDFUtilities.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PDFUtilities.swift; sourceTree = "<group>"; };
 		3E64BFFAB04BA2153D65BF32B0D1270A /* Pods-PDFUtilities_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-PDFUtilities_Example-dummy.m"; sourceTree = "<group>"; };
+		3EB1B12A1E1B284F00152A51 /* PDFDocumentPasswordInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFDocumentPasswordInfo.swift; sourceTree = "<group>"; };
+		3EB1B12C1E1B289900152A51 /* PDFConverters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFConverters.swift; sourceTree = "<group>"; };
 		42C1A973EF884ABB39CC17722C5CF4EA /* Pods-PDFUtilities_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-PDFUtilities_Tests.modulemap"; sourceTree = "<group>"; };
 		50A8CE2D0E2F3008B625068AC2245351 /* Pods-PDFUtilities_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PDFUtilities_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		54927E9EF7B8B1EBED072411B4D23EFC /* PDFUtilities-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PDFUtilities-prefix.pch"; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				22FC138506FF94DDA6E3F346CF13D567 /* PDFUtilities.swift */,
+				3EB1B12C1E1B289900152A51 /* PDFConverters.swift */,
+				3EB1B12A1E1B284F00152A51 /* PDFDocumentPasswordInfo.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -361,8 +367,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EB1B12B1E1B284F00152A51 /* PDFDocumentPasswordInfo.swift in Sources */,
 				66CABEABB76A3F7BD6B7BCB1973D3DAC /* PDFUtilities-dummy.m in Sources */,
 				C3C4A51B3EFF982C734A3B0B491FA804 /* PDFUtilities.swift in Sources */,
+				3EB1B12D1E1B289900152A51 /* PDFConverters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
