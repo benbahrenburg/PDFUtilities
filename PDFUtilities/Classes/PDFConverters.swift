@@ -136,7 +136,7 @@ open class PDFConverters {
     
     class open func pdfToImages(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {
         var output = [UIImage]()
-        let pdf = (documentPasswordInfo != nil) ? PDFUtilities.unlock(pdf: pdf, documentPasswordInfo: documentPasswordInfo) : pdf
+        let pdf = (documentPasswordInfo != nil) ? PDFUtilities.unlockDocument(pdf: pdf, documentPasswordInfo: documentPasswordInfo) : pdf
         
         let pageCount = pdf?.numberOfPages ?? 0
         for index in 1...pageCount {
