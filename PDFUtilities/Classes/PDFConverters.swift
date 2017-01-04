@@ -126,10 +126,8 @@ open class PDFConverters {
     }
     
     class open func pdfToImages(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {
-        if let provider = CGDataProvider(data: data as CFData) {
-            if let pdf = CGPDFDocument(provider) {
-                return pdfToImages(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
-            }
+        if let pdf = PDFUtilities.getPDFDocument(data: data) {
+            return pdfToImages(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
         }
         return nil
     }
