@@ -43,6 +43,13 @@ open class PDFUtilities {
             return false
         }
     }
+
+    class open func hasPassword(pdf: CGPDFDocument) -> Bool {
+        if pdf.isUnlocked == false || pdf.isEncrypted {
+            return true
+        }
+        return false
+    }
     
     class open func isValidPDF(data: Data) -> Bool {
         return autoreleasepool { () -> Bool in
