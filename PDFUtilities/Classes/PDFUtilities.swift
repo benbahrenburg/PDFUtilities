@@ -54,6 +54,9 @@ open class PDFUtilities {
     class open func isValidPDF(data: Data) -> Bool {
         return autoreleasepool { () -> Bool in
             if let pdf = getPDFDocument(data: data) {
+                if pdf.isUnlocked || pdf.isEncrypted {
+                    return true
+                }
                 return pdf.numberOfPages > 0
             }
             
