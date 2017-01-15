@@ -122,7 +122,7 @@ open class PDFConverters {
     }
     
     class open func pdfToImages(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> [UIImage]? {
-        return try pdfToImages(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
+        return pdfToImages(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
     }
     
     class open func pdfToImages(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {

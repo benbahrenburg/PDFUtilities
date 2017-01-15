@@ -73,7 +73,7 @@ open class PDFUtilities {
     }
     
     class open func ableToUnlock(data: Data, password: String) -> Bool {
-        return try ableToUnlock(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
+        return ableToUnlock(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
     class open func ableToUnlock(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Bool {
@@ -185,7 +185,7 @@ open class PDFUtilities {
     }
     
     class open func removePassword(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Data? {
-        return try removePassword(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
+        return removePassword(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
     }
     
     class open func removePassword(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> Data? {
