@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PDFUtilities'
-  s.version          = '0.1.0'
+  s.version          = '0.0.5'
   s.summary          = 'PDFUtilities makes working with PDFs in Swift easier.'
 
   s.description  = <<-DESC
