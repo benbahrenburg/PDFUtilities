@@ -48,7 +48,6 @@ public struct PDFDocumentPasswordInfo {
     /**
      The toInfo method is used to create meta data for unlocking or locking pdfs.
      
-     - Parameter forKey: The key used to return a stored value
      - Returns: An Array of items used when locking or unlocking PDFs.
      */
     func toInfo() -> [AnyHashable : Any] {
