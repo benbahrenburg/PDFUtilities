@@ -40,9 +40,9 @@ open class PDFConverters {
     }
     
     class open func pdfToData(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> Data {
-        let data = NSMutableData()
         
-        autoreleasepool {
+        return autoreleasepool { () -> Data in
+            let data = NSMutableData()
             let pageCount = pdf.numberOfPages
             let options = (documentPasswordInfo != nil) ? documentPasswordInfo?.toInfo() : nil
             
@@ -67,8 +67,10 @@ open class PDFConverters {
             }
             
             UIGraphicsEndPDFContext()
+            
+            return data as Data
         }
-        return data as Data
+        
     }
     
     class open func imagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1) throws -> Data? {
@@ -85,10 +87,9 @@ open class PDFConverters {
             return nil
         }
         
-        let data = NSMutableData()
-        let pageCount = images.count - 1
-        
-        autoreleasepool {
+        return autoreleasepool { () -> Data in
+            let data = NSMutableData()
+            let pageCount = images.count - 1
             let options = (documentPasswordInfo != nil) ? documentPasswordInfo?.toInfo() : nil
             UIGraphicsBeginPDFContextToData(data, .zero, options)
             
@@ -103,10 +104,11 @@ open class PDFConverters {
                 UIGraphicsBeginPDFPageWithInfo(bounds, nil)
                 images[index].draw(in: bounds)
             }
+            
             UIGraphicsEndPDFContext()
+            return data as Data
         }
         
-        return data as Data
     }
     
     class open func pdfToImages(fileURL: URL, password: String? = nil) throws -> [UIImage]? {

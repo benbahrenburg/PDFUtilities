@@ -34,14 +34,12 @@ open class PDFUtilities {
     }
     
     class open func hasPassword(data: Data) -> Bool {
-        return autoreleasepool { () -> Bool in
-            if let pdf = getPDFDocument(data: data) {
-                if pdf.isUnlocked == false || pdf.isEncrypted {
-                    return true
-                }
+        if let pdf = getPDFDocument(data: data) {
+            if pdf.isUnlocked == false || pdf.isEncrypted {
+                return true
             }
-            return false
         }
+        return false
     }
 
     class open func hasPassword(pdf: CGPDFDocument) -> Bool {
@@ -52,42 +50,40 @@ open class PDFUtilities {
     }
     
     class open func isValidPDF(data: Data) -> Bool {
-        return autoreleasepool { () -> Bool in
-            if let pdf = getPDFDocument(data: data) {
-                if pdf.isUnlocked || pdf.isEncrypted {
-                    return true
-                }
-                return pdf.numberOfPages > 0
+        if let pdf = getPDFDocument(data: data) {
+            if pdf.isUnlocked || pdf.isEncrypted {
+                return true
             }
-            
-            return false
+            return pdf.numberOfPages > 0
         }
+        
+        return false
     }
     
     class open func isValidPDF(fileURL: URL) throws -> Bool {
         return isValidPDF(data: try Data(contentsOf: fileURL))
     }
     
-    class open func ableToUnlock(fileURL: URL, password: String) throws -> Bool {
-        return try ableToUnlock(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
+    class open func isUnlockable(fileURL: URL, password: String) throws -> Bool {
+        return try isUnlockable(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
-    class open func ableToUnlock(data: Data, password: String) -> Bool {
-        return ableToUnlock(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
+    class open func isUnlockable(data: Data, password: String) -> Bool {
+        return isUnlockable(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
-    class open func ableToUnlock(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Bool {
-        return ableToUnlock(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
+    class open func isUnlockable(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Bool {
+        return isUnlockable(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
     }
     
-    class open func ableToUnlock(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> Bool {
+    class open func isUnlockable(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> Bool {
         if let pdf = getPDFDocument(data: data) {
-            return ableToUnlock(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
+            return isUnlockable(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
         }
         return false
     }
     
-    class open func ableToUnlock(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo) -> Bool {
+    class open func isUnlockable(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo) -> Bool {
         return autoreleasepool { () -> Bool in
             guard pdf.isEncrypted == true else { return true }
             guard pdf.unlockWithPassword("") == false else { return true }
