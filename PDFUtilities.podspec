@@ -1,11 +1,11 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PDFUtilities'
-  s.version          = '0.0.6'
-  s.description      = 'PDFUtilities makes working with PDFs in Swift easier.'
+  s.version          = '0.0.7'
+  s.summary      = 'Utilities to make working with PDFs bearable.'
 
-  s.summary   = <<-DESC
-    Utilities to make working with PDFs bearable.
+  s.description   = <<-DESC
+    Utilities to make working with PDFs bearable. Simpe to use tools to do common tasks with PDFs.
   DESC
 
   s.homepage         = 'https://github.com/benbahrenburg/PDFUtilities'
