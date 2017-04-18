@@ -43,15 +43,23 @@ open class PDFUtilities {
     }
 
     class open func hasPassword(pdf: CGPDFDocument) -> Bool {
-        if pdf.isUnlocked == false || pdf.isEncrypted {
+        if pdf.isUnlocked == false {
             return true
         }
+        
+        if pdf.isEncrypted {
+            if pdf.isUnlocked {
+                return false
+            }
+            return true
+        }
+        
         return false
     }
     
     class open func isValidPDF(data: Data) -> Bool {
         if let pdf = getPDFDocument(data: data) {
-            if pdf.isUnlocked || pdf.isEncrypted {
+            if hasPassword(pdf: pdf) {
                 return true
             }
             return pdf.numberOfPages > 0
