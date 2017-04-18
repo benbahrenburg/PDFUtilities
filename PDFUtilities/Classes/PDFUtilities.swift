@@ -29,20 +29,18 @@ open class PDFUtilities {
         return nil
     }
     
-    class open func hasPassword(fileURL: URL) throws -> Bool {
-        return hasPassword(data: try Data(contentsOf: fileURL))
+    class open func requirePasswordToOpen(fileURL: URL) throws -> Bool {
+        return requirePasswordToOpen(data: try Data(contentsOf: fileURL))
     }
     
-    class open func hasPassword(data: Data) -> Bool {
+    class open func requirePasswordToOpen(data: Data) -> Bool {
         if let pdf = getPDFDocument(data: data) {
-            if pdf.isUnlocked == false || pdf.isEncrypted {
-                return true
-            }
+            return requirePasswordToOpen(pdf: pdf)
         }
         return false
     }
 
-    class open func hasPassword(pdf: CGPDFDocument) -> Bool {
+    class open func requirePasswordToOpen(pdf: CGPDFDocument) -> Bool {
         if pdf.isUnlocked == false {
             return true
         }
@@ -59,7 +57,7 @@ open class PDFUtilities {
     
     class open func isValidPDF(data: Data) -> Bool {
         if let pdf = getPDFDocument(data: data) {
-            if hasPassword(pdf: pdf) {
+            if requirePasswordToOpen(pdf: pdf) {
                 return true
             }
             return pdf.numberOfPages > 0
