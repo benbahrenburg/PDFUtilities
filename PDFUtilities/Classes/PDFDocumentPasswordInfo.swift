@@ -41,8 +41,18 @@ public struct PDFDocumentPasswordInfo {
      
      - Parameter password: The password provided will be used as the User Password
      */
-    public init(password: String) {
-        self.userPassword = password
+    public init(userPassword: String) {
+        self.userPassword = userPassword
+    }
+
+    
+    /**
+     Creates a new instance of the PDFDocumentPasswordInfo object
+     
+     - Parameter password: The password provided will be used as the User Password
+     */
+    public init(ownerPassword: String) {
+        self.ownerPassword = ownerPassword
     }
     
     /**

@@ -35,10 +35,6 @@ open class PDFConverters {
         return backgroundImage
     }
     
-    class open func pdfToData(pdf: CGPDFDocument, password: String? = nil) -> Data {
-        return pdfToData(pdf: pdf, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
     class open func pdfToData(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> Data {
         
         return autoreleasepool { () -> Data in
@@ -77,10 +73,6 @@ open class PDFConverters {
         return try imagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: nil)
     }
     
-    class open func imagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, password: String) throws -> Data? {
-        return try imagesToPDF(images: images, scaleFactor: scaleFactor, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
     class open func imagesToPDF(images: [UIImage], scaleFactor: CGFloat = 1, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> Data? {
         
         guard scaleFactor > 0.0 else {
@@ -110,19 +102,7 @@ open class PDFConverters {
         }
         
     }
-    
-    class open func pdfToImages(fileURL: URL, password: String? = nil) throws -> [UIImage]? {
-        return try pdfToImages(fileURL: fileURL, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func pdfToImages(data: Data, password: String? = nil) -> [UIImage]? {
-        return pdfToImages(data: data, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func pdfToImages(pdf: CGPDFDocument, password: String? = nil) -> [UIImage]? {
-        return pdfToImages(pdf: pdf, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
+        
     class open func pdfToImages(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) throws -> [UIImage]? {
         return pdfToImages(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
     }
@@ -136,7 +116,7 @@ open class PDFConverters {
     
     class open func pdfToImages(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> [UIImage]? {
         var output = [UIImage]()
-        let pdf = (documentPasswordInfo != nil) ? PDFUtilities.unlockDocument(pdf: pdf, documentPasswordInfo: documentPasswordInfo) : pdf
+        let pdf = (documentPasswordInfo != nil) ? PDFUtilities.unlockDocument(pdf: pdf, documentPasswordInfo: documentPasswordInfo!) : pdf
         
         let pageCount = pdf?.numberOfPages ?? 0
         for index in 1...pageCount {

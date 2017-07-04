@@ -70,14 +70,6 @@ open class PDFUtilities {
         return isValidPDF(data: try Data(contentsOf: fileURL))
     }
     
-    class open func isUnlockable(fileURL: URL, password: String) throws -> Bool {
-        return try isUnlockable(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
-    class open func isUnlockable(data: Data, password: String) -> Bool {
-        return isUnlockable(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
     class open func isUnlockable(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Bool {
         return isUnlockable(data: try Data(contentsOf: fileURL), documentPasswordInfo: documentPasswordInfo)
     }
@@ -114,29 +106,18 @@ open class PDFUtilities {
         }
     }
     
-    class open func unlockDocument(data: Data, password: String? = nil) -> CGPDFDocument? {
-        return unlockDocument(data: data, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func unlockDocument(pdf: CGPDFDocument, password: String? = nil) -> CGPDFDocument? {
-        return unlockDocument(pdf: pdf, documentPasswordInfo: (password == nil ? nil : PDFDocumentPasswordInfo(password: password!)))
-    }
-    
-    class open func unlockDocument(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> CGPDFDocument? {
+    class open func unlockDocument(data: Data, documentPasswordInfo: PDFDocumentPasswordInfo) -> CGPDFDocument? {
         let pdf = CGPDFDocument(CGDataProvider(data: data as CFData)!)
-        
-        guard documentPasswordInfo != nil else { return pdf }
         
         return unlockDocument(pdf: pdf!, documentPasswordInfo: documentPasswordInfo)
     }
     
-    class open func unlockDocument(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo? = nil) -> CGPDFDocument? {
+    class open func unlockDocument(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo) -> CGPDFDocument? {
         
-        guard documentPasswordInfo != nil else { return pdf }
         guard pdf.isEncrypted == true else { return pdf }
         guard pdf.unlockWithPassword("") == false else { return pdf }
         
-        if let ownerPassword = documentPasswordInfo?.ownerPassword {
+        if let ownerPassword = documentPasswordInfo.ownerPassword {
             if let cPasswordString = ownerPassword.cString(using: String.Encoding.utf8) {
                 if (pdf.unlockWithPassword(cPasswordString)) {
                     return pdf
@@ -144,7 +125,7 @@ open class PDFUtilities {
             }
         }
         
-        if let userPassword = documentPasswordInfo?.userPassword {
+        if let userPassword = documentPasswordInfo.userPassword {
             if let cPasswordString = userPassword.cString(using: String.Encoding.utf8) {
                 if (pdf.unlockWithPassword(cPasswordString)) {
                     return pdf
@@ -153,14 +134,6 @@ open class PDFUtilities {
         }
         
         return nil
-    }
-    
-    class open func addPassword(fileURL: URL, password: String) throws -> Data? {
-        return try addPassword(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
-    class open func addPassword(data: Data, password: String) -> Data? {
-        return addPassword(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
     class open func addPassword(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Data? {
@@ -176,14 +149,6 @@ open class PDFUtilities {
     
     class open func addPassword(pdf: CGPDFDocument, documentPasswordInfo: PDFDocumentPasswordInfo) -> Data? {
         return PDFConverters.pdfToData(pdf: pdf, documentPasswordInfo: documentPasswordInfo)
-    }
-    
-    class open func removePassword(fileURL: URL, password: String) throws -> Data? {
-        return try removePassword(fileURL: fileURL, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
-    }
-    
-    class open func removePassword(data: Data, password: String) -> Data? {
-        return removePassword(data: data, documentPasswordInfo: PDFDocumentPasswordInfo(password: password))
     }
     
     class open func removePassword(fileURL: URL, documentPasswordInfo: PDFDocumentPasswordInfo) throws -> Data? {
